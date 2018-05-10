@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.DockerImageDao">
+
+    <resultMap id="dockerImageDto" type="com.anyun.cloud.dto.DockerImageDto">
+        <result property="id" column="id"/>
+        <result property="category" column="category"/>
+        <result property="categoryName" column="categoryName"/>
+        <result property="name" column="name"/>
+        <result property="tag" column="tag"/>
+        <result property="userDefineName" column="userDefineName"/>
+        <result property="descript" column="descript"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lastModifyDate" column="lastModifyDate"/>
+        <result property="status" column="status"/>
+        <result property="icon" column="icon"/>
+    </resultMap>
+
+    <select id="selectImageByConditions" parameterType="Map" resultMap="dockerImageDto">
+        select *   from anyuncloud.image_docker
+        where category=#{categoryType}  and   name =#{templateName}
+    </select>
+
+    <select id="selectById" parameterType="String" resultMap="dockerImageDto">
+        select *  from anyuncloud.image_docker
+        where id =#{id} limit 1
+    </select>
+
+    <insert id="insertUnregistDockerImages" parameterType="com.anyun.cloud.dto.DockerImageDto">
+        insert into anyuncloud.image_docker(id,category,name,tag,userDefineName,descript,createDate,lastModifyDate,status,icon)
+        values(#{id},#{category},#{name},#{tag},#{userDefineName},#{descript},#{createDate},#{lastModifyDate},#{status},#{icon})
+    </insert>
+
+    <select id="selectUnregistDockerImages" resultMap="dockerImageDto">
+        select *  from anyuncloud.image_docker
+        where status= 0
+    </select>
+
+    <update id="updateStatus" parameterType="map">
+        update anyuncloud.image_docker
+            set status=#{status} ,lastModifyDate=#{lastModifyDate},icon=#{icon},userDefineName=#{userDefineName},descript=#{descript}
+        where id=#{id}
+    </update>
+
+    <update id="update" parameterType="com.anyun.cloud.dto.DockerImageDto">
+        update anyuncloud.image_docker
+        <set>
+            lastModifyDate=#{lastModifyDate}
+            <if test="category!=null and category!='' ">
+                ,category=#{category}
+            </if>
+
+            <if test="tag !=null and  userDefineName!='' ">
+                ,tag =#{tag}
+            </if>
+
+            <if test="userDefineName !=null and  userDefineName!='' ">
+                ,userDefineName =#{userDefineName}
+            </if>
+
+            <if test="descript!=null and descript !='' ">
+                ,descript=#{descript}
+            </if>
+            <if test="status !=null and status !='' ">
+                ,status =#{status}
+            </if>
+            <if test="icon !=null and  icon!='' ">
+                ,icon =#{icon}
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+
+    <select id="selectByFullName" parameterType="map" resultMap="dockerImageDto">
+        select  distinct(a.name) ,a.*,(select  name   from  anyuncloud.image_ctegory_docker  where   id = a.category )  as    categoryName   from anyuncloud.image_docker  as a
+        where name=#{name} and category =#{category} and status=1
+    </select>
+
+    <select id="DockerImageQueryRegistry"   resultMap="dockerImageDto">
+        SELECT * FROM anyuncloud.image_docker  where  status =1 and
+        category  in ( SELECT  name  FROM  anyuncloud.image_ctegory_docker);
+    </select>
+
+    <select id="selectIamgeByCategory" parameterType="String" resultMap="dockerImageDto">
+        select * from anyuncloud.image_docker where category=#{name}
+    </select>
+</mapper>

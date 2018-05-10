@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS
+  IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.HostBaseInfoDao">
+
+    <resultMap id="hostBaseInfoDto" type="com.anyun.cloud.dto.HostBaseInfoDto">
+        <result property="id" column="id"/>
+        <result property="cluster" column="cluster"/>
+        <result property="name" column="name"/>
+        <result property="descript" column="description"/>
+        <result property="createDate" column="date_create"/>
+        <result property="lastModify" column="date_last_modify"/>
+        <result property="status" column="status"/>
+        <collection property="hostManagementIpInfoDto" column="id" select="selectManagementIpByHost"/>
+        <collection property="dockerHostInfoDto" column="id" select="selectDockerInfoById"/>
+        <collection property="hostExtInfoDto" column="id" select="selectHostExtInfoById"/>
+        <collection property="hostNetworkCardDtoList" column="id" select="selectHostNetworkCardByHost"/>
+    </resultMap>
+
+    <resultMap id="hostManagementIpInfoDto" type="com.anyun.cloud.dto.HostManagementIpInfoDto">
+        <result property="hostId" column="host"/>
+        <result property="ipAddress" column="ip"/>
+        <result property="createDate" column="date_create"/>
+        <result property="lastModifyDate" column="date_last_modify"/>
+    </resultMap>
+
+    <resultMap id="hostExtInfoDto" type="com.anyun.cloud.dto.HostExtInfoDto">
+        <result property="hostId" column="host"/>
+        <result property="cpuModel" column="cpu_model"/>
+        <result property="cpuMhz" column="cpu_mhz"/>
+        <result property="physicalCpus" column="cpu_physicals"/>
+        <result property="logicalCpus" column="cpu_logicals"/>
+        <result property="cpuCores" column="cpu_cores"/>
+        <result property="cpuPresentMode" column="cou_present_mode"/>
+        <result property="memoryTotal" column="memory_total"/>
+        <result property="dockerDiskTotal" column="docker_disk_total"/>
+        <result property="createDate" column="date_create"/>
+        <result property="lastModifyDate" column="date_last_modify"/>
+    </resultMap>
+
+    <resultMap id="dockerHostInfoDto" type="com.anyun.cloud.dto.DockerHostInfoDto">
+        <result property="host" column="host"/>
+        <result property="version" column="version"/>
+        <result property="arch" column="arch"/>
+        <result property="gitCommit" column="git_commit"/>
+        <result property="goVersion" column="go_version"/>
+        <result property="kernelVersion" column="kernel_version"/>
+        <result property="operatingSystem" column="operating_system"/>
+        <result property="createDate" column="date_create"/>
+        <result property="lastModifyDate"
+                column="date/java.sun.com/jaxp/xpath/dom with the XPathFactoryConfigurationException: javax.xml.xpath.XPathFactoryConfigurationException: No XPathF_last_modify"/>
+    </resultMap>
+
+
+    <resultMap id="hostNetworkCardDto" type="com.anyun.cloud.dto.HostNetworkCardDto">
+        <result property="id" column="id"/>
+        <result property="host" column="host"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="product" column="product"/>
+        <result property="vendor" column="vendor"/>
+        <result property="mac" column="mac"/>
+        <result property="speed" column="speed"/>
+        <result property="model" column="model"/>
+        <result property="bondDevice" column="bond_device"/>
+    </resultMap>
+
+    <resultMap id="hostTailDto" type="com.anyun.cloud.dto.HostTailDto">
+        <result property="id" column="id"/>
+        <result property="cluster" column="cluster"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="createDate" column="date_create"/>
+        <result property="lastModify" column="date_last_modify"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="hostBaseInfoDto" parameterType="String">
+        SELECT * FROM anyuncloud.host_info_base a
+        WHERE a.id = #{value}
+    </select>
+
+    <select id="selectManagementIpDto" parameterType="String" resultMap="hostManagementIpInfoDto">
+        SELECT * FROM `anyuncloud`.`host_info_management_ip` a
+        WHERE a.ip = #{value}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO `anyuncloud`.`host_info_base`
+        (`id`,`cluster`,`name`,`description`, `date_create`,`date_last_modify`,`status`)
+        VALUES
+        (#{id},#{cluster},#{name},#{descript},#{createDate},#{lastModify},#{status})
+    </insert>
+
+    <select id="selectManagementIpByHost" resultMap="hostManagementIpInfoDto" parameterType="String">
+        SELECT * FROM `anyuncloud`.`host_info_management_ip` a
+        WHERE a.host = #{value}
+    </select>
+
+    <select id="selectHostNetworkCardByHost" resultMap="hostNetworkCardDto" parameterType="String">
+        SELECT * FROM `anyuncloud`.`host_network_card` a
+        WHERE a.host = #{value}
+    </select>
+
+    <select id="selectByStatus" resultMap="hostBaseInfoDto" parameterType="Integer">
+        SELECT * FROM `anyuncloud`.`host_info_base` a
+        WHERE a.status = #{value}
+    </select>
+
+    <insert id="insertHostManagementIp" parameterType="Map">
+        INSERT INTO `anyuncloud`.`host_info_management_ip`
+        (`host`, `ip`, `date_create`,`date_last_modify`,`status`)
+        VALUES
+        (#{host},#{ip},#{createDate},#{lastModify},#{status})
+    </insert>
+
+    <insert id="insertDockerHostInfo" parameterType="com.anyun.cloud.dto.DockerHostInfoDto">
+        INSERT INTO `anyuncloud`.`docker_host_info`
+        (`host`, `version`, `arch`, `git_commit`, `go_version`, `kernel_version`, `operating_system`,
+        `date_create`,`date_last_modify`)
+        VALUES
+        (#{host},#{version},#{arch},#{gitCommit},#{goVersion},#{kernelVersion},
+        #{operatingSystem},#{createDate},#{lastModifyDate})
+    </insert>
+
+    <update id="updateDockerHostInfo" parameterType="com.anyun.cloud.dto.DockerHostInfoDto">
+        UPDATE `anyuncloud`.`docker_host_info` a
+        SET a.version = #{version},
+        a.arch = #{arch},
+        a.git_commit = #{gitCommit},
+        a.go_version = #{goVersion},
+        a.kernel_version = #{kernelVersion},
+        a.operating_system = #{operatingSystem},
+        a.date_last_modify = #{lastModifyDate}
+        WHERE a.host = #{host}
+    </update>
+
+    <update id="updateHostManagementIp" parameterType="Map">
+        UPDATE `anyuncloud`.`host_info_management_ip` a
+        SET a.ip = #{ip},
+        a.date_last_modify = #{lastModify}
+        WHERE a.host = #{host}
+    </update>
+
+    <update id="updateDockerHostStatus" parameterType="Map">
+        UPDATE `anyuncloud`.`host_info_base` a
+        SET a.status = #{status}
+        WHERE a.id = #{id}
+    </update>
+
+    <update id="updateHostApprovalInfo" parameterType="com.anyun.cloud.dto.HostBaseInfoDto">
+        UPDATE `anyuncloud`.`host_info_base` a
+        SET a.description = #{descript},
+        a.date_last_modify = #{lastModify},
+        a.status = #{status}
+        WHERE a.id = #{id}
+    </update>
+
+    <select id="selectDockerInfoById" resultMap="dockerHostInfoDto" parameterType="String">
+        SELECT * FROM anyuncloud.docker_host_info a
+        WHERE a.host = #{value}
+    </select>
+
+    <insert id="insertApprovalInfo" parameterType="com.anyun.cloud.dto.HostApprovalDto">
+        INSERT INTO `anyuncloud`.`host_info_approval`
+        (`host`, `reason`,`date_create`,`date_last_modify`,`status`)
+        VALUES
+        (#{host},#{reason},#{createDate},#{lastModifyDate},#{status})
+    </insert>
+
+    <insert id="insertHostExtInfo" parameterType="com.anyun.cloud.dto.HostExtInfoDto">
+        INSERT INTO `anyuncloud`.`host_info_ext`
+        (`host`, `cpu_model`, `cpu_mhz`, `cpu_physicals`, `cpu_logicals`,
+        `cpu_cores`, `cpu_present_mode`, `memory_total`, `docker_disk_total`,`date_create`,`date_last_modify`)
+        VALUES
+        (#{hostId},#{cpuModel},#{cpuMhz},#{physicalCpus},#{logicalCpus},#{cpuCores},#{cpuPresentMode},#{memoryTotal}
+        ,#{dockerDiskTotal},#{createDate},#{lastModifyDate})
+    </insert>
+
+    <select id="selectHostAllCpuFamily" resultType="String">
+        select distinct(cpu_model) from anyuncloud.host_info_ext where cpu_model is not null and cpu_model!=''
+    </select>
+
+    <select id="selectHostAllCpuCoreLimit" resultType="int">
+        select distinct(cpu_cores) from host_info_ext where cpu_cores is not null and cpu_cores!=0
+    </select>
+
+    <select id="selectHostListByCondition" parameterType="map" resultType="String">
+        select
+        h.id as id
+        from
+        anyuncloud.host_info_base as h ,
+        anyuncloud.host_info_ext as e ,
+        anyuncloud.host_info_management_ip as i
+        <where>
+            h.id = e.host and
+            e.host = i.host and
+            i.status=1 and
+            h.status=1
+            <if test="cpu_model!=null  and  cpu_model!='' ">
+                and e.cpu_model=#{cpu_model}
+            </if>
+            <if test="cpu_present_mode!=null and cpu_present_mode!='' ">
+                and e.cpu_present_mode=#{cpu_present_mode}
+            </if>
+            <if test="cpu_cores !=null and  cpu_cores!=''  ">
+                and e.cpu_cores &gt;= #{cpu_cores}
+            </if>
+            <if test="memory_total !=null and  memory_total!='' ">
+                and e.memory_total &gt;= #{memory_total}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectHostIdByIp" parameterType="String" resultType="String">
+        select host from anyuncloud.host_info_management_ip where ip=#{ip} limit 1
+    </select>
+
+    <select id="selectAllHostInfo" resultMap="hostBaseInfoDto">
+        select * from anyuncloud.host_info_base
+    </select>
+
+    <select id="selectHostInfoById" parameterType="String" resultMap="hostBaseInfoDto">
+        select * from anyuncloud.host_info_base where id=#{id}
+    </select>
+
+    <select id="selectHostExtInfoById" parameterType="String" resultMap="hostExtInfoDto">
+        select * from anyuncloud.host_info_ext a where a.host=#{value}
+    </select>
+
+    <select id="selectHExtDtoByHostId" parameterType="map" resultMap="hostExtInfoDto">
+        select * from anyuncloud.host_info_ext  where host=#{host}
+    </select>
+
+    <insert id="insertHostNetworkCard" parameterType="com.anyun.cloud.dto.HostNetworkCardDto">
+        insert into anyuncloud.host_network_card(id,host,name,description,product,vendor,mac,speed,model,bond_device)
+        values(#{id},#{host},#{name},#{description},#{product},#{vendor},#{mac},#{speed},#{model},#{bondDevice})
+    </insert>
+
+    <select id="selectHostNetworkCardByHostAndMac" parameterType="map" resultMap="hostNetworkCardDto">
+        select * from anyuncloud.host_network_card where id=#{id} and host=#{host}
+    </select>
+    <update id="updateHostTail" parameterType="map">
+        UPDATE `anyuncloud`.`host_info_base` a
+        SET a.cluster = #{cluster},
+        a.name = #{name},
+        a.date_last_modify = #{lastModify},
+        a.status = #{status}
+        WHERE a.description = #{ip}
+    </update>
+    <select id="selectHostInfoByDescription" parameterType="map" resultMap="hostTailDto">
+        select * from anyuncloud.host_info_base where description=#{description} limit 1
+    </select>
+
+    <update id="updateHostByIp" parameterType="map">
+        UPDATE `anyuncloud`.`host_info_base` a
+        SET a.date_last_modify = #{lastModify},
+        a.status = #{status}
+        WHERE a.description = #{ip}
+    </update>
+    <delete id="deleteFromHostInfoBase" parameterType="String">
+        delete from anyuncloud.host_info_base where id=#{id}
+    </delete>
+    <delete id="deleteFromHostInfoManagementIp" parameterType="String">
+        delete from anyuncloud.host_info_management_ip where host=#{id}
+    </delete>
+    <delete id="deleteFromHostInfoExt" parameterType="String">
+        delete from anyuncloud.host_info_ext where host=#{id}
+    </delete>
+    <delete id="deleteFromDockerHostInfo" parameterType="String">
+        delete from anyuncloud.docker_host_info where host=#{id}
+    </delete>
+    <delete id="deleteFromHostNetworkCard" parameterType="String">
+        delete from anyuncloud.host_network_card where host=#{id}
+    </delete>
+
+    <select id="selectHostByCluster" parameterType="String" resultMap="hostBaseInfoDto">
+        SELECT * FROM anyuncloud.host_info_base where cluster = #{value}
+    </select>
+
+    <select id="selectManagementIpDtoByHost" parameterType="String" resultMap="hostManagementIpInfoDto">
+        SELECT * FROM anyuncloud.host_info_management_ip WHERE host = #{value}
+    </select>
+    <select id="selectLabelByType" resultType="String">
+        select label from anyuncloud.net_label_info where type = "bridge"
+    </select>
+</mapper>

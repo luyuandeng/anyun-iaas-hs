@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ClusterDao">
+    <resultMap id="clusterDto" type="com.anyun.cloud.dto.ClusterDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="type" column="type"/>
+        <result property="primaryStorage" column="primary_storage"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="selectClusterByStatus" parameterType="map" resultMap="clusterDto">
+        select * from anyuncloud.cluster_info_base
+        <if test="status !='All'  " >
+            where  status=#{status}
+        </if>
+    </select>
+
+    <select id="queryAllCluster"  resultMap="clusterDto">
+        select * from anyuncloud.cluster_info_base
+    </select>
+
+    <select id="selectClusterByType" parameterType="String" resultMap="clusterDto">
+        select * from anyuncloud.cluster_info_base where type=#{type}
+    </select>
+
+    <select id="selectClusterByTypeAndStatus" parameterType="String" resultMap="clusterDto">
+        select * from anyuncloud.cluster_info_base where type=#{type} and status=#{status}
+    </select>
+
+    <select id="selectClusterById" parameterType="String" resultMap="clusterDto">
+        select * from anyuncloud.cluster_info_base where id=#{id}
+    </select>
+
+    <insert id="insertCluster" parameterType="com.anyun.cloud.dto.ClusterDto">
+        insert into anyuncloud.cluster_info_base
+        (id,name,description,type,status)
+        values
+        (#{id},#{name},#{description},#{type},#{status})
+    </insert>
+
+    <update id="updateCluster" parameterType="com.anyun.cloud.dto.ClusterDto">
+        update anyuncloud.cluster_info_base
+        <set>
+            <if test="name!=null and  name!=''">
+                name=#{name}
+            </if>
+            <if test="description!=null and description!='' ">
+                ,description=#{description}
+            </if>
+            <if test="status!=null and status!='' ">
+                ,status=#{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCluster" parameterType="String">
+        delete from anyuncloud.cluster_info_base where id=#{id}
+    </delete>
+
+    <update id="changeClusterStatus" parameterType="com.anyun.cloud.dto.ClusterDto">
+        update anyuncloud.cluster_info_base  set status=#{status} where id = #{id}
+    </update>
+</mapper>

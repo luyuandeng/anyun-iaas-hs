@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.DatabaseDao">
+    <resultMap id="databaseDto" type="com.anyun.cloud.dto.DatabaseDto">
+        <result property="id" column="id"/>
+        <result property="describe" column="describe"/>
+        <result property="name" column="name"/>
+        <result property="projectId" column="projectId"/>
+        <result property="type" column="type"/>
+        <result property="bridgeL3Ip" column="bridgeL3Ip"/>
+        <result property="bridgeL3" column="bridgeL3"/>
+        <result property="createTime" column="createTime"/>
+    </resultMap>
+
+    <resultMap id="databaseContainerDto" type="com.anyun.cloud.dto.DatabaseContainerDto">
+        <result property="containerId" column="containerId"/>
+        <result property="databaseId" column="databaseId"/>
+    </resultMap>
+
+    <select id="selectDatabaseDtoById" parameterType="map" resultMap="databaseDto">
+        SELECT * FROM anyuncloud.database_info_base where id=#{id};
+    </select>
+
+    <delete id="deleteById" parameterType="map">
+        delete from anyuncloud.database_info_base where id=#{id}
+    </delete>
+
+    <select id="selectDatabaseContainerDtoListByDatabaseId" parameterType="map" resultMap="databaseContainerDto">
+        SELECT * FROM anyuncloud.database_container_info where databaseId=#{databaseId}
+    </select>
+
+    <delete id="deleteDbContainerByContainerId" parameterType="map">
+        delete from anyuncloud.database_container_info where containerId=#{containerId}
+    </delete>
+
+    <delete id="deleteDbContainerByDatabaseId" parameterType="map">
+        delete from anyuncloud.database_container_info where databaseId=#{databaseId}
+    </delete>
+
+    <insert id="insertDatabase" parameterType="com.anyun.cloud.dto.DatabaseDto">
+        INSERT INTO `anyuncloud`.`database_info_base`
+        (`id`,
+        `projectId`,
+        `name`,
+        `describe`,
+        `type`,
+        `bridgeL3`,
+        `bridgeL3Ip`,
+        `createTime`)
+        VALUES
+        (#{id},
+        #{projectId},
+        #{name},
+        #{describe},
+        #{type},
+        #{bridgeL3},
+        #{bridgeL3Ip},
+        #{createTime})
+    </insert>
+
+    <insert id="insertDbContainer" parameterType="com.anyun.cloud.dto.DatabaseContainerDto">
+        INSERT INTO anyuncloud.database_container_info
+        (containerId,
+        databaseId)
+        VALUES
+        (#{containerId},
+        #{databaseId}
+        )
+    </insert>
+
+    <select id="selectDatabaseDtoListByProjectId" parameterType="map" resultMap="databaseDto">
+        SELECT * FROM anyuncloud.database_info_base where projectId=#{projectId}
+    </select>
+</mapper>

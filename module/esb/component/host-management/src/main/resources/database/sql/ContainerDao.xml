@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ContainerDao">
+
+    <resultMap id="containerDto" type="com.anyun.cloud.dto.ContainerDto">
+        <result property="id" column="id"/>
+        <result property="imageId" column="imageId"/>
+        <result property="name" column="name"/>
+        <result property="hostName" column="hostname"/>
+        <result property="cpuCoreLimit" column="cpuCoreLimit"/>
+        <result property="memoryLimit" column="memoryLimit"/>
+        <result property="memorySwapLimit" column="memorySwapLimit"/>
+        <result property="privileged" column="privileged"/>
+        <result property="cpuFamily" column="cpuFamily"/>
+        <result property="createTime" column="createTime"/>
+        <result property="lastModifyTime" column="lastModifyTime"/>
+        <result property="status" column="status"/>
+        <result property="hostId" column="hostId"/>
+        <result property="projectId" column="projectId"/>
+        <result property="shortId" column="shortId"/>
+        <result property="imageName" column="imageName"/>
+        <result property="type" column="type"/>
+        <result property="purpose" column="purpose"/>
+        <result property="imageName" column="imageName"/>
+        <result property="calculationSchemeId" column="calculationSchemeId"/>
+        <result property="diskSchemeId" column="diskSchemeId"/>
+    </resultMap>
+
+    <resultMap id="dockerImageDto" type="com.anyun.cloud.dto.DockerImageDto">
+        <result property="id" column="id"/>
+        <result property="category" column="category"/>
+        <result property="name" column="name"/>
+        <result property="tag" column="tag"/>
+        <result property="userDefineName" column="userDefineName"/>
+        <result property="descript" column="descript"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lastModifyDate" column="lastModifyDate"/>
+        <result property="status" column="status"/>
+        <result property="icon" column="icon"/>
+    </resultMap>
+
+    <insert id="insertContainer" parameterType="com.anyun.cloud.dto.ContainerDto">
+        insert into anyuncloud.container_info_base
+        (id, name, hostname,imageId,cpuCoreLimit,memoryLimit,memorySwapLimit,privileged,cpuFamily,
+        createTime,lastModifyTime,status,projectId,shortId,type,purpose,hostId,imageName,calculationSchemeId,diskSchemeId)
+        VALUES
+        (#{id},#{name},#{hostName},#{imageId},#{cpuCoreLimit},#{memoryLimit},
+        #{memorySwapLimit},#{privileged},#{cpuFamily},#{createTime},#{lastModifyTime},#{status},
+        #{projectId},#{shortId},#{type},#{purpose},#{hostId},#{imageName},#{calculationSchemeId},#{diskSchemeId})
+    </insert>
+
+    <insert id="insertRelationNetwork" parameterType="map">
+        insert into anyuncloud.container_info_ip(id,containerId,ip,networkId)
+        values(#{id},#{containerId},#{ip},#{networkId})
+    </insert>
+
+    <update id="updateContainer" parameterType="com.anyun.cloud.dto.ContainerDto">
+        update anyuncloud.container_info_base set status=#{status},lastModifyTime=#{lastModifyTime} where id=#{id}
+    </update>
+
+    <select id="selectContainerByProject" parameterType="map" resultMap="containerDto">
+        select * from
+        anyuncloud.container_info_base where projectId=#{project} and  type=0 order by lastModifyTime
+        desc
+    </select>
+
+    <delete id="deleteRelationContainerAndNetwork" parameterType="map">
+        delete from anyuncloud.container_info_ip where containerId = #{containerId} and networkId= #{networkId}
+    </delete>
+
+    <select id="selectContainerByNetworkId" parameterType="String" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where id in ( select containerId from anyuncloud.containerInfoIp
+        where networkId=#{networkId})
+    </select>
+
+    <select id="selectById" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where id =#{value}
+    </select>
+
+    <select id="selectContainerByNetLabel" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where   type=#{type} and
+        id in(select container from anyuncloud.container_net_ip_info
+        where label = #{label})
+    </select>
+
+    <select id="selectContainerByImage" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where imageId=#{image} and status > 0 and type=#{type}
+    </select>
+
+    <select id="selectRegistImageInfoById" parameterType="String" resultMap="dockerImageDto">
+        select * from anyuncloud.image_docker where id=#{id} and status=1
+    </select>
+
+    <select id="selectContainerByPurpose" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where projectId=#{project} and purpose =#{purpose} and
+        type=#{type}
+    </select>
+
+    <select id="selectContainerByHost" parameterType="String" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where hostId=#{value}
+    </select>
+
+    <select id="selectContainerByLabel" parameterType="String" resultMap="containerDto">
+        select * from container_info_base where status>0 and id in
+        (select container from container_net_ip_info where label=#{value})
+    </select>
+
+    <delete id="deleteContainerById" parameterType="String">
+        delete FROM anyuncloud.container_info_base where id=#{value};
+    </delete>
+    <select id="selectContianerByHostId" parameterType="String" resultType="String">
+        select id from anyuncloud.container_info_base where hostId=#{id}
+    </select>
+
+    <select id="selectContainerDtoById" parameterType="String" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where id=#{value}
+    </select>
+
+    <select id="selectContainerByType" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where type=#{type}
+    </select>
+
+
+    <update id="changeCalculationScheme" parameterType="com.anyun.cloud.dto.ContainerDto">
+        update  anyuncloud.container_info_base  set  calculationSchemeId=#{calculationSchemeId} ,lastModifyTime=#{lastModifyTime}     where  id=#{id}
+    </update>
+
+    <update id="changeDiskScheme" parameterType="com.anyun.cloud.dto.ContainerDto">
+        update  anyuncloud.container_info_base  set  diskSchemeId=#{diskSchemeId} ,lastModifyTime=#{lastModifyTime}     where  id=#{id}
+    </update>
+
+    <select id="selectContainerListByDiskSchemeId" parameterType="map" resultMap="containerDto">
+     select * from anyuncloud.container_info_base where  diskSchemeId=#{diskSchemeId}
+    </select>
+
+    <select id="selectContainerListByCalculationSchemeId" parameterType="map" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where  calculationSchemeId=#{calculationSchemeId}
+    </select>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.PlatformDao">
+    <resultMap id="platformDto" type="com.anyun.cloud.dto.PlatformDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="ipDomain" column="ip_domain"/>
+        <result property="port" column="port"/>
+        <result property="baseUrl" column="base_url"/>
+        <result property="area" column="area"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <insert id="insertPlatform" parameterType="com.anyun.cloud.dto.PlatformDto">
+        insert into anyuncloud.platform_info_base
+        (id,name,description,ip_domain,port,base_url,area,status)
+        values
+        (#{id},#{name},#{description},#{ipDomain},#{port},#{baseUrl},#{area},#{status})
+    </insert>
+
+    <update id="updatePlatform" parameterType="com.anyun.cloud.dto.PlatformDto">
+        update anyuncloud.platform_info_base
+        set
+        name=#{name},description=#{description},ip_domain=#{ipDomain},port=#{port},base_url=#{baseUrl},area=#{area},status=#{status}
+        where id = #{id}
+    </update>
+
+    <update id="updatePlatformByStatusAndId" parameterType="map">
+        update anyuncloud.platform_info_base set status=#{status} where id=#{id}
+    </update>
+
+    <update id="updatePlatformByCondition" parameterType="map">
+        update anyuncloud.platform_info_base set status=#{status} where id!=#{id}
+    </update>
+
+    <delete id="deletePlatform" parameterType="map">
+        delete from anyuncloud.platform_info_base where id=#{id}
+    </delete>
+
+    <select id="selectPlatformById" parameterType="map" resultMap="platformDto">
+        select * from anyuncloud.platform_info_base  where id=#{id}
+    </select>
+
+    <select id="selectPlatformByStatus" parameterType="int" resultMap="platformDto">
+        select * from anyuncloud.platform_info_base where status=#{status}
+    </select>
+
+    <select id="selectPlatformAll" resultMap="platformDto">
+        select * from anyuncloud.platform_info_base
+    </select>
+</mapper>

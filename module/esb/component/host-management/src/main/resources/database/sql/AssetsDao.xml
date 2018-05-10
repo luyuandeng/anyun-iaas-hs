@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+
+
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AssetsDao">
+
+    <resultMap id="assetsDto" type="com.anyun.cloud.dto.AssetsDto">
+        <result property="id" column="id"/>
+        <result property="used" column="used"/>
+        <result property="purpose" column="purpose"/>
+        <result property="displayName" column="displayName"/>
+        <result property="deviceName" column="deviceName"/>
+        <result property="deviceSerialNumber" column="deviceSerialNumber"/>
+        <result property="deviceModel" column="deviceModel"/>
+        <result property="deviceCategory" column="deviceCategory"/>
+        <result property="categoryDescription" column="categoryDescription"/>
+        <result property="managementIp" column="managementIp"/>
+        <result property="systemIp" column="systemIp"/>
+        <result property="ipmiIp" column="ipmiIp"/>
+        <result property="position" column="position"/>
+        <result property="cpu" column="cpu"/>
+        <result property="memory" column="memory"/>
+        <result property="hardDisk" column="hardDisk"/>
+        <result property="deviceBelong" column="deviceBelong"/>
+        <result property="supplier" column="supplier"/>
+        <result property="telephone" column="telephone"/>
+        <result property="maintenancePeriod" column="maintenancePeriod"/>
+        </resultMap>
+
+    <select id="selectAssetsById" parameterType="String" resultMap="assetsDto">
+        select * from anyuncloud.assets_info_base where id=#{id}
+    </select>
+
+    <select id="selectAssetsAll" parameterType="String" resultMap="assetsDto">
+        select * from anyuncloud.assets_info_base
+    </select>
+
+    <select id="selectAssetsByDeviceCategory" parameterType="String" resultMap="assetsDto">
+        select * from anyuncloud.assets_info_base where deviceCategory=#{deviceCategory}
+    </select>
+
+    <delete id="deleteAssetsById" parameterType="String">
+        delete from anyuncloud.assets_info_base where id=#{id}
+    </delete>
+
+    <insert id="createAssets" parameterType="com.anyun.cloud.dto.AssetsDto">
+        insert into anyuncloud.assets_info_base(id,used,purpose,displayName,deviceName,deviceSerialNumber,deviceModel,deviceCategory,categoryDescription,managementIp,
+                    systemIp,ipmiIp,position,cpu,memory,hardDisk,deviceBelong,supplier,telephone,maintenancePeriod)
+        values(#{id},#{used},#{purpose},#{displayName},#{deviceName},#{deviceSerialNumber},#{deviceModel},#{deviceCategory},#{categoryDescription},#{managementIp},
+              #{systemIp},#{ipmiIp},#{position},#{cpu},#{memory},#{hardDisk},#{deviceBelong},#{supplier},#{telephone},#{maintenancePeriod})
+    </insert>
+
+    <update id="updateAssets" parameterType="com.anyun.cloud.dto.AssetsDto">
+        update anyuncloud.assets_info_base
+        <set>
+            <if test="used==0 or used==1">
+                used = #{used}
+            </if>
+            <if test="purpose!=null and purpose!=''">
+                ,purpose = #{purpose}
+            </if>
+            <if test="displayName!=null and displayName!=''">
+                ,displayName = #{displayName}
+            </if>
+            <if test="deviceName!=null and deviceName!=''">
+                ,deviceName = #{deviceName}
+            </if>
+            <if test="deviceSerialNumber!=null and deviceSerialNumber!=''">
+                ,deviceSerialNumber = #{deviceSerialNumber}
+            </if>
+            <if test="deviceModel!=null and deviceModel!=''">
+                ,deviceModel = #{deviceModel}
+            </if>
+            <if test="categoryDescription!=null and categoryDescription!=''">
+                ,categoryDescription = #{categoryDescription}
+            </if>
+            <if test="managementIp=null and managementIp!=''">
+                ,managementIp = #{managementIp}
+            </if>
+            <if test="systemIp!=null and systemIp!=''">
+                ,systemIp = #{systemIp}
+            </if>
+            <if test="ipmiIp!=null and ipmiIp!=''">
+                ,ipmiIp = #{ipmiIp}
+            </if>
+            <if test="position!=null and position!=''">
+                ,position = #{position}
+            </if>
+            <if test="cpu!=null and cpu!=''">
+                ,cpu = #{cpu}
+            </if>
+            <if test="memory!=null and memory!=''">
+                ,memory = #{memory}
+            </if>
+            <if test="hardDisk!=null and hardDisk!=''">
+                ,hardDisk = #{hardDisk}
+            </if>
+            <if test="deviceBelong!=null and deviceBelong!=''">
+                ,deviceBelong = #{deviceBelong}
+            </if>
+            <if test="supplier!=null and supplier!=''">
+                ,supplier = #{supplier}
+            </if>
+            <if test="telephone!=null and telephone!=''">
+                ,telephone = #{telephone}
+            </if>
+            <if test="maintenancePeriod!=null and maintenancePeriod!=''">
+                ,maintenancePeriod = #{maintenancePeriod}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+</mapper>

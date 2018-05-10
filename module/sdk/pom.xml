@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.anyun.cloud.iaas</groupId>
+        <artifactId>anyun-iaas-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>iaas-sdk-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>PARENT :: AnyunCloud IaaS SDK</name>
+
+    <properties>
+        <version.iaas-common>1.0.0</version.iaas-common>
+        <version.cxf>3.1.2</version.cxf>
+        <version.jersey>2.22.1</version.jersey>
+    </properties>
+
+    <modules>
+        <module>iaas-restful-api-sdk</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-lang</artifactId>
+                <version>${version.iaas-common}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-model</artifactId>
+                <version>${version.iaas-common}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.core</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

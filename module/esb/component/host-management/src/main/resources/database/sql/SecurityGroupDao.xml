@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SecurityGroupDao">
+
+    <resultMap id="securityGroupDto" type="com.anyun.cloud.dto.SecurityGroupDto">
+        <result property="label" column="label"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="port" column="port"/>
+        <result property="ipOrSegment" column="ipOrSegment"/>
+        <result property="rule" column="rule"/>
+        <result property="project" column="project"/>
+        <result property="createDate" column="createDate"/>
+    </resultMap>
+
+    <resultMap id="securityGroupIpDto" type="com.anyun.cloud.dto.SecurityGroupIpDto">
+        <result property="id" column="id"/>
+        <result property="containerNetIpId" column="containerNetIp_id"/>
+        <result property="securityGroupId" column="securityGroup_id"/>
+        <result property="priority" column="priority"/>
+    </resultMap>
+
+    <insert id="securityGroupInsert" parameterType="com.anyun.cloud.dto.SecurityGroupDto">
+        insert into
+        anyuncloud.security_group_info(label,name,description,port,ipOrSegment,rule,project,createDate)
+        values(#{label},#{name},#{description},#{port},#{ipOrSegment},#{rule},#{project},#{createDate})
+    </insert>
+
+    <select id="securityGroupSelectByProjectAndPort" parameterType="map" resultMap="securityGroupDto">
+        select * from anyuncloud.security_group_info where port=#{port} AND project = #{project}
+    </select>
+
+    <update id="securityGroupUpdate" parameterType="com.anyun.cloud.dto.SecurityGroupDto">
+        update anyuncloud.security_group_info set name=#{name} , description=#{description} where label=#{label}
+    </update>
+
+    <select id="securityGroupSelectByLabel" parameterType="map" resultMap="securityGroupDto">
+        select * from anyuncloud.security_group_info where label=#{label} limit 1
+    </select>
+
+    <select id="securityGroupSelectByProject" parameterType="map" resultMap="securityGroupDto">
+        select * from anyuncloud.security_group_info where project=#{project}
+    </select>
+
+    <delete id="securityGroupDeleteByLabel" parameterType="map">
+        delete from anyuncloud.security_group_info where label=#{label}
+    </delete>
+
+    <insert id="securityGroupIpInsert" parameterType="com.anyun.cloud.dto.SecurityGroupIpDto">
+        insert into anyuncloud.security_group_ip (id,containerNetIpId,securityGroupId)
+        values(#{id},#{containerNetIpId},#{securityGroupId})
+    </insert>
+
+    <delete id="securityGroupIpDelete" parameterType="com.anyun.cloud.dto.SecurityGroupIpDto">
+        delete from anyuncloud.security_group_ip where containerNetIpId=#{containerNetIpId} and
+        securityGroupId=#{securityGroupId}
+
+    </delete>
+    <select id="selectHostIp" resultType="com.anyun.cloud.dto.SecurityGroupCallDto">
+        select
+        b.port as port,
+        b.ipOrSegment as ipOrSegment,
+        c.ip as containerIp,
+        e.ip as hostIp
+        from
+        anyuncloud.security_group_ip as a ,
+        anyuncloud.security_group_info as b ,
+        anyuncloud.container_net_ip_info as c ,
+        anyuncloud.container_info_base as d,
+        anyuncloud.host_info_management_ip as e
+        where
+        b.label = a.securityGroupId and
+        a.containerNetIpId = c.id and
+        c.container = d.id and
+        d.hostId = e.host
+        group by hostip;
+    </select>
+
+    <select id="securityGroupSelectAll" resultMap="securityGroupDto">
+        select * from anyuncloud.security_group_info
+    </select>
+
+    <select id="securityGroupIpQueryAll" resultMap="securityGroupIpDto">
+        select * from anyuncloud.security_group_ip
+    </select>
+
+    <delete id="deleteSecurityGroupIpByContainerNetId" parameterType="map">
+        delete from anyuncloud.security_croup_ip where containerNetIpId=#{containerNetIpId}
+    </delete>
+
+    <select id="selectSecurityGroupIpDtoBySecurityGroupIdAndContainerNetIpId" parameterType="map"
+            resultMap="securityGroupIpDto">
+        SELECT * FROM anyuncloud.security_group_ip where containerNetIpId=#{containerNetIpId} and
+        securityGroupId=#{securityGroupId};
+    </select>
+    <select id="selectSecurityGroupByContainerId" parameterType="map" resultMap="securityGroupDto">
+        select * from anyuncloud.security_group_info where label in
+        (
+        SELECT securityGroupId FROM anyuncloud.security_group_ip where containerNetIpId in
+        (SELECT id FROM anyuncloud.container_net_ip_info where container =#{container}
+        )
+        )
+    </select>
+</mapper>

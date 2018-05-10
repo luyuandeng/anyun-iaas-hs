@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.anyun.cloud.iaas</groupId>
+        <artifactId>iaas-esb-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>iaas-component-service-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>PARENT :: IaaS ESB Component :: Management Service</name>
+
+    <properties>
+        <version.anyun.sdk>1.0.0</version.anyun.sdk>
+        <version.mysql>5.1.36</version.mysql>
+        <version.mybatis>3.3.0</version.mybatis>
+        <version.pagehelper>4.1.2</version.pagehelper>
+        <version.jsqlparser>0.9.4</version.jsqlparser>
+        <version.docker-java>3.0.3</version.docker-java>
+        <version.crate>0.54.9</version.crate>
+        <version.hashids>1.0.1</version.hashids>
+        <version.jproc>2.0.1</version.jproc>
+        <version.jersey>2.23</version.jersey>
+        <version.sun-jersey>1.19.1</version.sun-jersey>
+        <version.jetty>9.4.0.M0</version.jetty>
+        <version.jsch>0.1.53</version.jsch>
+        <version.st>4.0.2</version.st>
+    </properties>
+
+    <modules>
+        <module>host-management</module>
+        <module>storage-management</module>
+        <module>vm-template-management</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-api-http-restful</artifactId>
+                <version>${version.anyun.sdk}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${version.mysql}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${version.mybatis}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${version.pagehelper}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${version.jsqlparser}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.docker-java</groupId>
+                <artifactId>docker-java</artifactId>
+                <version>${version.docker-java}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.crate</groupId>
+                <artifactId>crate-client</artifactId>
+                <version>${version.crate}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hashids</groupId>
+                <artifactId>hashids</artifactId>
+                <version>${version.hashids}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.buildobjects</groupId>
+                <artifactId>jproc</artifactId>
+                <version>${version.jproc}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-moxy</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty-http</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet-core</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${version.sun-jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${version.jsch}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.antlr</groupId>
+                <artifactId>stringtemplate</artifactId>
+                <version>${version.st}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

@@ -1,0 +1,2 @@
+#!/bin/sh
+java -jar -Dconsole.string.colored=true target/HostAgent-1.0.jar --startup.type=DAEMON --daemon.type=start

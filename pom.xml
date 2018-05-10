@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>anyun-iaas-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>ROOT :: Anyun Security Cloud Computing Platform</name>
+    <url>https://gitlab.anyuncloud.com/anyuncloud/anyun-iaas</url>
+    <description>
+        A reference implementation of  Cloud IaaS Management
+        for AnyunCloud secure cloud computing platform
+    </description>
+
+    <organization>
+        <name>Anyun Cloud</name>
+        <url>http://anyun.com</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3, 29 June 2007</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>
+                The GNU General Public License is a free,
+                copyleft license for software and other kinds of works.
+            </comments>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:https://gitlab.anyuncloud.com/anyuncloud/anyun-iaas.git</connection>
+        <developerConnection>scm:git@gitlab.anyuncloud.com:anyuncloud/anyun-iaas.git</developerConnection>
+        <url>https://gitlab.anyuncloud.com/anyuncloud/anyun-iaas.git</url>
+        <tag>release</tag>
+    </scm>
+
+    <issueManagement>
+        <url>https://gitlab.anyuncloud.com/anyuncloud/anyun-iaas/issues</url>
+        <system>GitLab Issues</system>
+    </issueManagement>
+
+    <developers>
+        <developer>
+            <id>TwitchGG</id>
+            <name>Tang Lei</name>
+            <email>ray@proxzone.com</email>
+            <organization>Anyun Cloud</organization>
+        </developer>
+        <developer>
+            <id>sxt</id>
+            <name>申许涛</name>
+            <email>314255358@qq.com </email>
+            <organization>Anyun Cloud</organization>
+        </developer>
+        <developer>
+            <id>gp</id>
+            <name>高鹏</name>
+            <email>895077860@qq.com</email>
+            <organization>Anyun Cloud</organization>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
+
+        <camel.version>2.16.1</camel.version>
+        <version.commons-lang2>2.6</version.commons-lang2>
+        <version.commons-lang3>3.4</version.commons-lang3>
+        <version.commons-io>2.5</version.commons-io>
+        <version.commons-pool2>2.4.2</version.commons-pool2>
+        <version.commons-cli>1.3.1</version.commons-cli>
+        <version.commons-codec>1.10</version.commons-codec>
+        <version.junit>4.12</version.junit>
+        <version.logback>1.1.3</version.logback>
+        <version.slf4j>1.7.12</version.slf4j>
+        <version.jackson>2.7.0</version.jackson>
+        <version.bouncycastle>1.54</version.bouncycastle>
+        <version.gson>2.7</version.gson>
+        <version.guava>19.0</version.guava>
+        <version.jedis>2.7.3</version.jedis>
+        <version.zookeeper>3.4.8</version.zookeeper>
+
+        <version.plugin-bundle>3.0.0</version.plugin-bundle>
+        <version.plugin-compiler>3.3</version.plugin-compiler>
+        <version.plugin-jar>2.4</version.plugin-jar>
+        <version.plugin-exec>1.1</version.plugin-exec>
+        <version.plugin-dependency>2.5.1</version.plugin-dependency>
+        <version.json-lib>2.4</version.json-lib>
+    </properties>
+
+    <modules>
+        <module>module/common</module>
+        <module>module/esb</module>
+        <module>module/sdk</module>
+        <module>module/deploy</module>
+        <module>module/client/agent</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-parent</artifactId>
+                <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${version.commons-lang2}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${version.commons-lang3}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${version.commons-io}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${version.commons-pool2}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-cli</groupId>
+                <artifactId>commons-cli</artifactId>
+                <version>${version.commons-cli}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${version.commons-codec}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${version.bouncycastle}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcmail-jdk15on</artifactId>
+                <version>${version.bouncycastle}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpg-jdk15on</artifactId>
+                <version>${version.bouncycastle}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.jaxrs</groupId>
+                <artifactId>jackson-jaxrs-json-provider</artifactId>
+                <version>${version.jackson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.gson}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${version.guava}</version>
+            </dependency>
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${version.jedis}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${version.zookeeper}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.felix</groupId>
+                    <artifactId>maven-bundle-plugin</artifactId>
+                    <version>${version.plugin-bundle}</version>
+                    <extensions>true</extensions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.plugin-compiler}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${version.plugin-jar}</version>
+                    <configuration>
+                        <archive>
+                            <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${version.plugin-exec}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.plugin-dependency}</version>
+                    <executions>
+                        <execution>
+                            <id>copy-dependencies</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>copy-dependencies</goal>
+                            </goals>
+                            <configuration>
+                                <outputDirectory>
+                                    ${project.build.directory}/lib/
+                                </outputDirectory>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>apache.snapshots</id>
+            <name>Apache Snapshot Repository</name>
+            <url>http://repository.apache.org/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>anyun-common</id>
+            <name>AnyunCloud Common Library</name>
+            <url>http://mvnrepo.anyuncloud.com/repository/bintray-anyun-common</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>anyun-internal</id>
+            <name>AnyunCloud Internal</name>
+            <url>http://mvnrepo.anyuncloud.com/repository/internal/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>crate-plugins</id>
+            <name>bintray-plugins</name>
+            <url>http://dl.bintray.com/crate/crate</url>
+        </repository>
+    </repositories>
+
+    <profiles>
+        <profile>
+            <id>repo-deploy</id>
+            <distributionManagement>
+                <repository>
+                    <id>anyun-bintray</id>
+                    <name>Anyun PAM Bintray Repository</name>
+                    <url>http://mvnrepo.anyuncloud.com/repository/bintray-anyun-iaas/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+</project>

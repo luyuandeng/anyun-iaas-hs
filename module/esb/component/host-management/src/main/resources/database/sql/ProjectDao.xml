@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ProjectDao">
+    <resultMap id="projectDto" type="com.anyun.cloud.dto.ProjectDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="descript" column="descript"/>
+        <result property="space" column="space"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lastModifyDate" column="lastModifyDate"/>
+        <result property="platFormNetworkId" column="platFormNetworkId"/>
+        <result property="userUniqueId" column="userUniqueId"/>
+    </resultMap>
+
+    <insert id="insertProject" parameterType="com.anyun.cloud.dto.ProjectDto">
+        insert into anyuncloud.project_info_base
+        (id,name,descript,space,createDate,lastModifyDate,platFormNetworkId,userUniqueId)
+        VALUES
+        (#{id},#{name},#{descript},#{space},#{createDate},#{lastModifyDate},#{platFormNetworkId},#{userUniqueId})
+    </insert>
+
+    <update id="updateProject" parameterType="com.anyun.cloud.dto.ProjectDto">
+        update anyuncloud.project_info_base
+        <set>
+            lastModifyDate=#{lastModifyDate}
+            <if test=" name!=null and  name!=''">
+                ,name=#{name}
+            </if>
+            <if test="descript!=null and descript!='' ">
+                ,descript=#{descript}
+            </if>
+            <if test="space!=null and space!='' ">
+                ,space=#{space}
+            </if>
+            <if test="platFormNetworkId!=null and platFormNetworkId!='' ">
+                ,platFormNetworkId=#{platFormNetworkId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjectById" parameterType="String">
+        delete from anyuncloud.project_info_base where id=#{id}
+    </delete>
+
+    <select id="selectProjectByCondition" parameterType="String" resultMap="projectDto">
+        select * from anyuncloud.project_info_base
+        where userUniqueId=#{value}
+        order by createDate desc
+    </select>
+
+    <select id="selectProjectById" parameterType="String" resultMap="projectDto">
+        select * from anyuncloud.project_info_base where id=#{id}
+    </select>
+
+    <select id="selectProjectDtoByPlatFormNetworkId" parameterType="String" resultMap="projectDto">
+        select * from anyuncloud.project_info_base where platFormNetworkId=#{value}
+    </select>
+</mapper>

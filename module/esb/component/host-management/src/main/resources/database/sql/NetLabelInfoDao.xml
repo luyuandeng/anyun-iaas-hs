@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.NetLabelInfoDao">
+
+    <resultMap id="netLabelInfoDto" type="com.anyun.cloud.dto.NetLabelInfoDto">
+        <result property="label" column="label"/>
+        <result property="name" column="name"/>
+        <result property="descr" column="descr"/>
+        <result property="gateway" column="gateway"/>
+        <result property="subnet" column="subnet"/>
+        <result property="type" column="type"/>
+        <result property="createtime" column="createtime"/>
+    </resultMap>
+
+    <resultMap id="containerIpInfoDto" type="com.anyun.cloud.dto.ContainerIpInfoDto">
+        <result property="id" column="id"/>
+        <result property="ip" column="ip"/>
+        <result property="mac" column="mac"/>
+        <result property="label" column="label"/>
+        <result property="container" column="container"/>
+    </resultMap>
+
+    <resultMap id="netLabelIpContainerDto" type="com.anyun.cloud.dto.NetLabelIpContainerDto">
+        <result property="container" column="container"/>
+        <result property="containerName" column="containerName"/>
+        <result property="netLabel" column="netLabel"/>
+        <result property="netLabelName" column="netLabelName"/>
+        <result property="gateway" column="gateway"/>
+        <result property="subnet" column="subnet"/>
+        <result property="ip" column="ip"/>
+        <result property="mac" column="mac"/>
+    </resultMap>
+
+    <resultMap id="containerNetIpMacDto" type="com.anyun.cloud.dto.ContainerNetIpMacDto">
+        <result property="id" column="id"/>
+        <result property="ip" column="ip"/>
+        <result property="mac" column="mac"/>
+        <result property="container" column="container"/>
+        <result property="net" column="label"/>
+        <result property="project" column="container"/>
+        <result property="containerName" column="containerName"/>
+        <result property="netName" column="netName"/>
+        <result property="projectName" column="projectName"/>
+    </resultMap>
+
+    <select id="selectById" parameterType="String" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where label=#{label}
+    </select>
+
+    <insert id="insertContainerNetIpInfo" parameterType="map">
+        insert into anyuncloud.container_net_ip_info(id,ip,mac,label,container)
+        values(#{id},#{ip},#{mac},#{label},#{container})
+    </insert>
+
+    <delete id="deleteContainerNetIpInfo" parameterType="map">
+        delete from anyuncloud.container_net_ip_info where container=#{container} and label=#{label}
+    </delete>
+
+    <insert id="insertNetLabelInfo" parameterType="com.anyun.cloud.dto.NetLabelInfoDto">
+        insert into anyuncloud.net_label_info(label,name,descr,gateway,subnet,type,createtime)
+        values(#{label},#{name},#{descr},#{gateway},#{subnet},#{type},#{createtime})
+    </insert>
+
+    <delete id="deleteNetLabelInfoByLabel" parameterType="String">
+        delete from anyuncloud.net_label_info where label=#{label}
+    </delete>
+
+    <select id="NetLabelInfoQuery" resultType="com.anyun.cloud.dto.NetLabelInfoDto">
+        select * from anyuncloud.net_label_info
+    </select>
+
+    <select id="selectNetLabelInfoByLabel" parameterType="String" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where label=#{label}
+    </select>
+
+    <select id="selectNetLabelInfoByProject" parameterType="String" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where label =
+        ( select platFormNetworkId from anyuncloud.project_info_base where id= #{id} )
+    </select>
+
+    <select id="selectContainerIpByCondition" parameterType="String" resultMap="containerIpInfoDto">
+        select * from anyuncloud.container_net_ip_info where label=#{label} and container=#{container}
+    </select>
+
+    <select id="selectAllBridgeNetLabel" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where type="bridge"
+    </select>
+
+    <select id="selectContainerLabelIpByProject" parameterType="String" resultMap="netLabelIpContainerDto">
+        select
+        c.id as container,
+        c.name as containerName,
+        l.label as netLabel ,
+        l.name as netLabelName,
+        l.gateway as gateway,
+        l.subnet as subnet,
+        i.ip as ip,
+        i.mac as macnetLabelName
+        FROM
+        anyuncloud.container_info_base as c ,
+        anyuncloud.container_net_ip_info as i,
+        anyuncloud.net_label_info as l
+        where
+        c.project_id=#{value}
+        and c.status>0
+        and c.type=0
+        and c.id=i.container
+        and i.label=l.label
+        and l.type="bridge"
+    </select>
+
+    <select id="selectNetLabelInfoByLabelAndType" parameterType="map" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where type=#{type} and label=#{label}
+    </select>
+
+    <select id="selectContainerNetIpMacByKeyword" parameterType="map" resultMap="containerNetIpMacDto">
+        select distinct(i.id) as id,
+        i.ip as ip,
+        i.mac as mac,
+        c.id as container,
+        c.name as containerName,
+        n.label as net ,
+        n.name as netName ,
+        p.id as project ,
+        p.name as projectName
+        from
+        anyuncloud.project_info_base p ,
+        anyuncloud.container_info_base c,
+        anyuncloud.net_label_info n,
+        anyuncloud.container_net_ip_info i
+        where p.id=c.project_id and
+        c.status>0 and
+        c.id=i.container and
+        i.label=n.label
+        and n.type="bridge"
+        <if test="keyword!= null and  keyword!='' ">
+            and
+            (
+            c.name like CONCAT('%',#{keyword},'%')
+            or
+            p.name like CONCAT('%',#{keyword},'%')
+            or
+            n.name like CONCAT('%',#{keyword},'%')
+            or
+            n.label like CONCAT('%',#{keyword},'%')
+            or
+            i.ip like CONCAT('%',#{keyword},'%')
+            )
+        </if>
+        order by p.id, c.id ,n.label,i.id
+    </select>
+
+    <select id="selectContainerIpInfoByIp" parameterType="String" resultMap="containerIpInfoDto">
+        SELECT * FROM anyuncloud.container_net_ip_info where ip=#{ip} limit 1
+    </select>
+
+    <select id="selectNetLabelInfoByContainer" parameterType="map" resultMap="netLabelInfoDto">
+        select * from anyuncloud.net_label_info where label in
+        (
+        SELECT label FROM anyuncloud.container_net_ip_info where container=#{container}
+        )
+    </select>
+    <select id="selectContainerIpInfoByCondition" parameterType="map" resultMap="containerIpInfoDto">
+        SELECT * FROM anyuncloud.container_net_ip_info where  label=#{label}  and  container=#{container}
+    </select>
+
+    <select id="selectIpByLabel" parameterType="String" resultType="com.anyun.cloud.dto.IpDto">
+        select ip from anyuncloud.container_net_ip_info where label=#{label}
+    </select>
+
+    <select id="selectNetLabelInfoByType" parameterType="String" resultMap="netLabelInfoDto">
+        select * from   anyuncloud.net_label_info where type=#{type}
+    </select>
+    <select id="selectContainerIpDtoByContainerAndNetLabel" parameterType="map" resultMap="containerIpInfoDto">
+        select * from anyuncloud.container_net_ip_info where label=#{label} and container=#{container}
+    </select>
+
+    <select id="selectContainerIpInfoBySecurityGroup" parameterType="map" resultMap="containerIpInfoDto">
+        SELECT * FROM
+        anyuncloud.container_net_ip_info where id
+        in
+        ( SELECT containerNetIpId FROM
+        anyuncloud.security_group_ip
+        where securityGroupId=#{label})
+    </select>
+
+    <select id="selectContainerIpInFoByProjectAndLabel" parameterType="map" resultMap="containerIpInfoDto">
+        SELECT
+        *
+        FROM
+        anyuncloud.container_net_ip_info
+        where
+        label=#{label}
+        and
+        container in
+        (SELECT id FROM anyuncloud.container_info_base where projectId=#{projectId});
+    </select>
+</mapper>

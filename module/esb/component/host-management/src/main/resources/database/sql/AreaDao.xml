@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.AreaDao">
+    <resultMap id="areaDto" type="com.anyun.cloud.dto.AreaDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="queryAllArea" resultMap="areaDto">
+        select * from anyuncloud.area_info_base
+    </select>
+
+    <select id="selectAreaByStatus" parameterType="String" resultMap="areaDto">
+        select * from anyuncloud.area_info_base where status=#{status}
+    </select>
+
+    <select id="selectAreaByType" parameterType="String" resultMap="areaDto">
+        select * from anyuncloud.area_info_base where type=#{type}
+    </select>
+
+    <select id="selectAreaByTypeAndStatus" parameterType="map" resultMap="areaDto">
+        select * from anyuncloud.area_info_base where type=#{type} and status=#{status}
+    </select>
+
+    <insert id="createArea" parameterType="com.anyun.cloud.dto.AreaDto">
+        insert into anyuncloud.area_info_base (id,name,description,type,status)
+        values
+        (#{id},#{name},#{description},#{type},#{status})
+    </insert>
+
+    <update id="updateArea" parameterType="com.anyun.cloud.dto.AreaDto">
+        update anyuncloud.area_info_base
+        <set>
+            <if test=" name!=null and  name!=''">
+                name=#{name}
+            </if>
+            <if test="description!=null and description!='' ">
+                ,description=#{description}
+            </if>
+            <if test="type!=null and type!='' ">
+                ,type=#{type}
+            </if>
+            <if test="status!=null and status!='' ">
+                ,status=#{status}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="selectAreaById" parameterType="String" resultMap="areaDto">
+        select * from anyuncloud.area_info_base where id=#{id}
+    </select>
+
+    <delete id="deleteAreaById" parameterType="String">
+        delete from anyuncloud.area_info_base where id=#{id}
+    </delete>
+
+    <update id="changeAreaStatus" parameterType="com.anyun.cloud.dto.AreaDto">
+        update anyuncloud.area_info_base set status=#{status} where id=#{id}
+    </update>
+</mapper>

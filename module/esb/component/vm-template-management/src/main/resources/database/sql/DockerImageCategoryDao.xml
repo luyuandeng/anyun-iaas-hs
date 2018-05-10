@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.DockerImageCategoryDao">
+    <resultMap id="dockerImageCategoryDto" type="com.anyun.cloud.dto.DockerImageCategoryDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="shortName" column="shortName"/>
+        <result property="descript" column="descript"/>
+        <result property="dateCreate" column="dateCreate"/>
+        <result property="dateLastModify" column="dateLastModify"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+    <select id="selectById" parameterType="String" resultMap="dockerImageCategoryDto">
+        select * from anyuncloud.image_ctegory_docker where id=#{id} limit 1
+    </select>
+
+    <!--<update id="insert" parameterType="com.anyun.cloud.dto.DockerImageCategoryDto">
+        update  anyuncloud.image_ctegory_docker set status=#{status} dateLastModify=#{lastModifyDate} where id=#{id}
+    </update>-->
+
+     <select id="selectRegistryCategories"  resultMap="dockerImageCategoryDto" >
+         select * from anyuncloud.image_ctegory_docker where status =1
+     </select>
+
+    <!--<delete id="delete" parameterType="String">
+        delete from anyuncloud.image_ctegory_docker where id=#{id}
+    </delete>-->
+
+    <update id="updataStatus" parameterType="com.anyun.cloud.dto.DockerImageCategoryDto">
+        update  anyuncloud.image_ctegory_docker
+            set status=#{status} ,dateLastModify=#{dateLastModify}
+                ,shortName=#{shortName},descript=#{descript}
+        where id=#{id}
+    </update>
+
+    <update id="deleteStatus" parameterType="map">
+        update  anyuncloud.image_ctegory_docker
+            set status=#{status} ,dateLastModify=#{lastModifyDate}
+        where id=#{id}
+    </update>
+
+    <update id="update" parameterType="com.anyun.cloud.dto.DockerImageCategoryDto">
+        update anyuncloud.image_ctegory_docker
+            set
+            <if test="shortName!=null or shortName!=''">
+                shortName =#{shortName}
+            </if>
+            <if test="descript!=null or descript!=''">
+            ,descript=#{descript}
+            </if>
+            ,dateLastModify = now()
+        where id =#{id}
+    </update>
+
+    <insert id="insertCategory" parameterType="com.anyun.cloud.dto.DockerImageCategoryDto">
+        insert into anyuncloud.image_ctegory_docker(id,name,shortName,descript,dateCreate,dateLastModify,status)
+        values(#{id},#{name},#{shortName},#{descript},#{dateCreate},#{dateLastModify},#{status})
+     </insert>
+
+    <select id="selectUnregistCategories"  resultMap="dockerImageCategoryDto" >
+        select * from anyuncloud.image_ctegory_docker where status = 0
+    </select>
+</mapper>

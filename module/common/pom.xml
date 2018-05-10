@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.anyun.cloud.iaas</groupId>
+        <artifactId>anyun-iaas-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>iaas-common-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>PARENT :: AnyunCloud IaaS Commons Library</name>
+
+    <properties>
+
+        <version.jproc>2.0.1</version.jproc>
+        <version.javax-rs-api>2.0.1</version.javax-rs-api>
+        <version.cxf>3.1.2</version.cxf>
+        <version.dbcp>2.1.1</version.dbcp>
+        <version.jsch>0.1.53</version.jsch>
+        <version.jgroups>3.6.4.Final</version.jgroups>
+        <version.servlet-api>3.1.0</version.servlet-api>
+    </properties>
+
+    <modules>
+        <module>common-lang</module>
+        <module>common-model</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${version.gson}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.buildobjects</groupId>
+                <artifactId>jproc</artifactId>
+                <version>${version.jproc}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-dbcp2</artifactId>
+                <version>${version.dbcp}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${version.javax-rs-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-extension-providers</artifactId>
+                <version>${version.cxf}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jcraft</groupId>
+                <artifactId>jsch</artifactId>
+                <version>${version.jsch}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgroups</groupId>
+                <artifactId>jgroups</artifactId>
+                <version>${version.jgroups}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${version.servlet-api}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

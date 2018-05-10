@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.anyun.cloud.iaas</groupId>
+        <artifactId>anyun-iaas-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../../</relativePath>
+    </parent>
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>iaas-agent-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>PARENT :: AnyunCloud IaaS Agent</name>
+
+    <properties>
+        <version.iaas-common>1.0.0</version.iaas-common>
+        <version.jproc>2.0.1</version.jproc>
+        <version.jersey>2.23</version.jersey>
+        <version.sun-jersey>1.19.1</version.sun-jersey>
+        <version.jetty>9.4.0.M0</version.jetty>
+        <version.netty>4.1.4.Final</version.netty>
+    </properties>
+
+    <modules>
+        <module>docker-host-agent</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-lang</artifactId>
+                <version>${version.iaas-common}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.zookeeper</groupId>
+                        <artifactId>zookeeper</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-model</artifactId>
+                <version>${version.iaas-common}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.anyun.common</groupId>
+                <artifactId>anyun-common-logger</artifactId>
+                <version>${version.iaas-common}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.buildobjects</groupId>
+                <artifactId>jproc</artifactId>
+                <version>${version.jproc}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.media</groupId>
+                <artifactId>jersey-media-moxy</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-jetty-http</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.jersey.containers</groupId>
+                <artifactId>jersey-container-servlet-core</artifactId>
+                <version>${version.jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-server</artifactId>
+                <version>${version.sun-jersey}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-servlet</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${version.jetty}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${version.netty}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

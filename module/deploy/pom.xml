@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.anyun.cloud.iaas</groupId>
+        <artifactId>anyun-iaas-parent</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../../</relativePath>
+    </parent>
+    <groupId>com.anyun.cloud.iaas</groupId>
+    <artifactId>iaas-deploy-tool-parent</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+    <name>PARENT :: AnyunCloud IaaS Deploy Tools</name>
+
+    <properties>
+        <version.iaas-common>1.0.0</version.iaas-common>
+        <version.jproc>2.0.1</version.jproc>
+        <version.mysql>5.1.36</version.mysql>
+        <version.mybatis>3.3.0</version.mybatis>
+        <version.pagehelper>4.1.2</version.pagehelper>
+        <version.jsqlparser>0.9.4</version.jsqlparser>
+    </properties>
+
+    <modules>
+        <module>configuration-cache-reload</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-lang</artifactId>
+                <version>${version.iaas-common}</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>log4j</artifactId>
+                        <groupId>log4j</groupId>
+                    </exclusion>
+                    <exclusion>
+                        <artifactId>slf4j-log4j12</artifactId>
+                        <groupId>org.slf4j</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.anyun.cloud.iaas</groupId>
+                <artifactId>iaas-common-model</artifactId>
+                <version>${version.iaas-common}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.buildobjects</groupId>
+                <artifactId>jproc</artifactId>
+                <version>${version.jproc}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${version.mysql}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${version.mybatis}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${version.pagehelper}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.jsqlparser</groupId>
+                <artifactId>jsqlparser</artifactId>
+                <version>${version.jsqlparser}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

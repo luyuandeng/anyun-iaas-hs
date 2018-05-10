@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~     Licensed to the Apache Software Foundation (ASF) under one or more
+  ~     contributor license agreements.  See the NOTICE file distributed with
+  ~     this work for additional information regarding copyright ownership.
+  ~     The ASF licenses this file to You under the Apache License, Version 2.0
+  ~     (the "License"); you may not use this file except in compliance with
+  ~     the License.  You may obtain a copy of the License at
+  ~
+  ~          http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  -->
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.VolumeDao">
+
+    <resultMap id="storageDto" type="com.anyun.cloud.dto.StorageDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="descr" column="descr"/>
+        <result property="filesystem" column="filesystem"/>
+        <result property="purpose" column="purpose"/>
+        <result property="type" column="type"/>
+        <result property="createDate" column="create_date"/>
+        <result property="lastModifyDate" column="last_modify_date"/>
+        <result property="linkState" column="link_state"/>
+        <result property="availableState" column="available_state"/>
+    </resultMap>
+
+    <resultMap id="volumeDto" type="com.anyun.cloud.dto.VolumeDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="descr" column="descr"/>
+        <result property="space" column="space"/>
+        <result property="project" column="project"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lastModifyDate" column="lastModifyDate"/>
+        <result property="storageId" column="storageId"/>
+    </resultMap>
+
+    <resultMap id="containerVolumeDto" type="com.anyun.cloud.dto.ContainerVolumeDto">
+        <result property="id" column="id"/>
+        <result property="container" column="container"/>
+        <result property="volume" column="volume"/>
+        <result property="mountPath" column="mountPath"/>
+    </resultMap>
+
+    <resultMap id="projectDto" type="com.anyun.cloud.dto.ProjectDto">
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="descript" column="descript"/>
+        <result property="space" column="space"/>
+        <result property="createDate" column="createDate"/>
+        <result property="lastModifyDate" column="lastModifyDate"/>
+        <result property="platFormNetworkId" column="platFormNetworkId"/>
+    </resultMap>
+
+    <resultMap id="containerDto" type="com.anyun.cloud.dto.ContainerDto">
+        <result property="id" column="id"/>
+        <result property="imageId" column="imageId"/>
+        <result property="name" column="name"/>
+        <result property="hostName" column="hostname"/>
+        <result property="cpuCoreLimit" column="cpuCoreLimit"/>
+        <result property="memoryLimit" column="memoryLimit"/>
+        <result property="memorySwapLimit" column="memorySwapLimit"/>
+        <result property="privileged" column="privileged"/>
+        <result property="cpuFamily" column="cpuFamily"/>
+        <result property="createTime" column="createTime"/>
+        <result property="lastModifyTime" column="lastModifyTime"/>
+        <result property="status" column="status"/>
+        <result property="projectId" column="projectId"/>
+        <result property="shortId" column="shortId"/>
+        <result property="imageName" column="imageName"/>
+    </resultMap>
+
+
+    <insert id="insertVolume" parameterType="com.anyun.cloud.dto.VolumeDto">
+        insert into anyuncloud.volume_info_base(id,name,descr,space,project,createDate,lastModifyDate,storageId)
+        values(#{id},#{name},#{descr},#{space},#{project},#{createDate},#{lastModifyDate},#{storageId})
+    </insert>
+
+    <update id="updateVolume" parameterType="com.anyun.cloud.dto.VolumeDto">
+        update anyuncloud.volume_info_base
+        <set>
+            lastModifyDate=#{lastModifyDate},
+            <if test="name!=null and  name!='' ">
+                name=#{name},
+            </if>
+            <if test="descr!=null and  descr!='' ">
+                descr=#{descr},
+            </if>
+            <if test="space !=null and  space!=''">
+                space=#{space}
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteVolumeById" parameterType="String">
+        delete from anyuncloud.volume_info_base where id=#{value}
+    </delete>
+
+    <delete id="deleteContainerVolumeByVolume" parameterType="String">
+        delete from anyuncloud.container_info_volume where  volume=#{value}
+    </delete>
+
+    <select id="selectVolumeById" parameterType="String" resultMap="volumeDto">
+        select * from anyuncloud.volume_info_base where id=#{id}
+    </select>
+
+    <select id="selectVolumeByContainer" parameterType="map" resultMap="volumeDto">
+        SELECT *  FROM anyuncloud.volume_info_base  where id in
+        (SELECT  volume  FROM anyuncloud.container_info_volume  where container= #{container});
+    </select>
+
+    <select id="selectVolumeByProject" parameterType="String" resultMap="volumeDto">
+        select v.* from anyuncloud.volume_info_base as v ,
+        anyuncloud.project_info_base as p
+        where v.project=p.id and
+        p.id=#{id}
+    </select>
+
+    <insert id="insertContainerVolume" parameterType="com.anyun.cloud.dto.ContainerVolumeDto">
+        insert into anyuncloud.container_info_volume (id,container,volume,mountPath)
+        values (#{id},#{container},#{volume},#{mountPath})
+    </insert>
+
+    <delete id="deleteContainerVolume" parameterType="com.anyun.cloud.dto.ContainerVolumeDto">
+        delete from anyuncloud.container_info_volume where container=#{container} and volume=#{volume}
+    </delete>
+
+    <select id="selectManagementIpByContainer" parameterType="String" resultType="String">
+        SELECT ip FROM anyuncloud.host_info_management_ip
+        where host = (SELECT hostId FROM anyuncloud.container_info_base where id =#{value});
+    </select>
+
+    <select id="selectContainerByVolume" parameterType="String" resultType="String">
+        select c.id from anyuncloud.container_info_base as c,
+        anyuncloud.container_info_volume as cv,
+        anyuncloud.volume_info_base as v
+        where c.status >0 and
+        c.id=cv.container and
+        cv.volume=v.id and
+        v.id =#{id}
+    </select>
+
+    <select id="selectContainerById" parameterType="String" resultMap="containerDto">
+        select * from anyuncloud.container_info_base where id =#{container}
+    </select>
+
+    <select id="selectContainerMountVolumeInfoByCondition" parameterType="map" resultMap="containerVolumeDto">
+        select * from  anyuncloud.container_info_volume
+        where container =#{container} and volume =#{volume}  limit 1
+    </select>
+
+    <select id="selectVolumeByStroagePurpose" parameterType="String" resultMap="volumeDto">
+        select a.* from anyuncloud.volume_info_base a ,anyuncloud.storage_info_base b
+        where b.purpose = #{purpose}
+    </select>
+
+    <select id="selectAllVolume" resultMap="volumeDto">
+        select * from anyuncloud.volume_info_base
+    </select>
+
+    <select id="selectContainerVolumeDtoList" parameterType="map" resultMap="containerVolumeDto">
+        SELECT * FROM anyuncloud.container_info_volume
+        <where>
+            1=1
+            <choose>
+                <when test="container !=null  and container!='' ">
+                   and   container=#{container}
+                </when>
+                <when test="volume !=null  and volume!='' ">
+                  and  volume=#{volume}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <select id="selectVolumeByStorageId" parameterType="String" resultMap="volumeDto">
+        SELECT * FROM anyuncloud.volume_info_base where storageId=#{value};
+    </select>
+</mapper>
